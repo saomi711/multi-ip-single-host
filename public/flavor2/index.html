@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flavor 02: Cyber Azure | Multi-IP Proof</title>
+  <meta name="description" content="Flavor 02 - Cyber Azure. Demonstrating Linux single physical interface multi-IP binding via Nginx.">
+  <link rel="stylesheet" href="/shared/styles.css">
+</head>
+<body class="flavor-2" data-flavor-id="2">
+  <div class="ambient-glow"></div>
+  <div class="ambient-grid"></div>
+
+  <div class="app-container">
+    <!-- Top Navigation Header -->
+    <header class="top-nav">
+      <div class="brand-group">
+        <div class="brand-icon">02</div>
+        <div class="brand-info">
+          <h1>Multi-IP Routing Engine</h1>
+          <p>Single Host Interface: <span style="color: #fff; font-family: var(--font-mono);">enp4s0</span></p>
+        </div>
+      </div>
+      <div class="nav-badges">
+        <div class="status-pill">
+          <span class="ping-indicator"></span>
+          <span>Online &bull; Bound</span>
+        </div>
+        <div class="clock-pill" id="live-clock">--:--:--</div>
+      </div>
+    </header>
+
+    <!-- Hero Card -->
+    <section class="hero-card">
+      <span class="hero-tag">&#x25C6; Flavor 02 Instance</span>
+      <h2 class="hero-title">Cyber <span class="highlight">Azure</span></h2>
+      <p class="hero-desc">
+        Proof of concept: A single Linux physical machine bound to multiple IP addresses on the local area network.
+        This page represents Flavor 02, served from local backend <code style="color:#00d2ff">localhost:9002</code> and exposed externally via Nginx on dedicated IP <code style="color:#00d2ff">192.168.0.102:9002</code>.
+      </p>
+
+      <!-- Routing Visualization Flow -->
+      <div class="routing-flow-box">
+        <div class="flow-title">
+          <span>Traffic Flow Architecture</span>
+          <span style="color: var(--flavor-primary); font-family: var(--font-mono);">Port 9002 Route</span>
+        </div>
+        <div class="flow-nodes">
+          <div class="flow-node">
+            <div class="flow-label">External Client</div>
+            <div class="flow-val">Outside Traffic</div>
+            <div class="flow-sub">LAN / WAN Client</div>
+          </div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node active-target">
+            <div class="flow-label">Nginx Listen Socket</div>
+            <div class="flow-val">192.168.0.102:9002</div>
+            <div class="flow-sub">Physical enp4s0 Alias</div>
+          </div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node">
+            <div class="flow-label">Localhost Target</div>
+            <div class="flow-val">127.0.0.1:9002</div>
+            <div class="flow-sub">Backend Worker #2</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Metrics Grid -->
+    <section class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-header">
+          <span>External IP</span>
+          <div class="metric-icon">&#x25CE;</div>
+        </div>
+        <div class="metric-value">192.168.0.102</div>
+        <div class="metric-footer">Bound on interface enp4s0</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <span>External Port</span>
+          <div class="metric-icon">&#x29C9;</div>
+        </div>
+        <div class="metric-value">:9002</div>
+        <div class="metric-footer">Nginx reverse proxy entry</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <span>Local Target</span>
+          <div class="metric-icon">&#x21BB;</div>
+        </div>
+        <div class="metric-value">127.0.0.1:9002</div>
+        <div class="metric-footer">Internal application listener</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <span>Accessed Via</span>
+          <div class="metric-icon">&#x25A6;</div>
+        </div>
+        <div class="metric-value" id="metric-accessed-via">Detecting...</div>
+        <div class="metric-footer">Active browser Host header</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <span>Roundtrip Ping</span>
+          <div class="metric-icon">&#x26A1;</div>
+        </div>
+        <div class="metric-value" id="metric-latency">Measuring...</div>
+        <div class="metric-footer">Latency to backend node</div>
+      </div>
+    </section>
+
+    <!-- Flavor Switcher Section -->
+    <section class="switcher-section">
+      <div class="section-header">
+        <div>
+          <h3 class="section-title">Jump to Another Flavor</h3>
+          <p class="section-subtitle">Each flavor is isolated to its own IP address and dedicated port on this physical machine</p>
+        </div>
+        <div class="switcher-controls">
+          <button class="control-btn active" id="btn-mode-lan" onclick="setNavMode('lan')">LAN IP Links</button>
+          <button class="control-btn" id="btn-mode-localhost" onclick="setNavMode('localhost')">Localhost Links</button>
+        </div>
+      </div>
+
+      <div class="flavor-nav-grid" id="flavor-nav-grid">
+        <!-- Rendered by app.js -->
+      </div>
+    </section>
+
+    <!-- Proof & Verification Terminals -->
+    <section class="proof-section">
+      <!-- Terminal 1: Testing from outside -->
+      <div class="terminal-card">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="terminal-dot dot-red"></span>
+            <span class="terminal-dot dot-yellow"></span>
+            <span class="terminal-dot dot-green"></span>
+          </div>
+          <span class="terminal-title">external-client-test.sh</span>
+          <button class="copy-btn" data-target="cmd-outside">COPY</button>
+        </div>
+        <div class="terminal-body" id="cmd-outside">
+<span class="terminal-comment"># Run this from another PC or phone on the same network:</span>
+<span class="terminal-prompt">$ </span>curl -I http://192.168.0.102:9002/
+
+<span class="terminal-comment"># Response verifies Nginx header & correct flavor routing:</span>
+<span class="terminal-highlight">HTTP/1.1 200 OK</span>
+<span class="terminal-highlight">Server:</span> nginx
+<span class="terminal-highlight">X-Flavor:</span> Cyber Azure
+<span class="terminal-highlight">X-Served-Port:</span> 9002
+        </div>
+      </div>
+
+      <!-- Terminal 2: Headers Log -->
+      <div class="terminal-card">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="terminal-dot dot-red"></span>
+            <span class="terminal-dot dot-yellow"></span>
+            <span class="terminal-dot dot-green"></span>
+          </div>
+          <span class="terminal-title">live-request-headers.log</span>
+          <button class="copy-btn" data-target="headers-log">COPY</button>
+        </div>
+        <div class="terminal-body" id="headers-log">
+<span class="terminal-comment"># Live headers inspected by reverse proxy:</span>
+<span class="terminal-highlight">Host:</span> 192.168.0.102:9002
+<span class="terminal-highlight">X-Real-IP:</span> 192.168.0.x
+<span class="terminal-highlight">X-Forwarded-For:</span> 192.168.0.x
+        </div>
+      </div>
+    </section>
+
+    <footer class="app-footer">
+      Multi-IP Single Physical Machine Architecture Proof &bull; Running on Linux Kernel &bull; Nginx &bull; enp4s0
+    </footer>
+  </div>
+
+  <script src="/shared/app.js"></script>
+</body>
+</html>

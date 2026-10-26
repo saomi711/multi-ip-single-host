@@ -1,0 +1,12 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package and server logic
+COPY server/package.json ./server/
+COPY server/app.js ./server/
+COPY public ./public
+
+EXPOSE 9001 9002 9003 9004 9005
+
+CMD ["node", "server/app.js"]

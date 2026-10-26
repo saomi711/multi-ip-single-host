@@ -1,0 +1,12 @@
+{
+  "name": "multi-port-flavor-backend",
+  "version": "1.0.0",
+  "description": "5-flavor multi-port backend listening on 127.0.0.1:9001-9005",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": ["multi-port", "nginx", "ip-binding", "multi-ip"],
+  "author": "Antigravity",
+  "license": "MIT"
+}
